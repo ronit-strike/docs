@@ -1,33 +1,38 @@
 ---
 title: 'Introduction'
-description: 'Example section for showcasing API endpoints'
+description: 'API Documentation for Strike – Redefining Sports Betting as Its Own Asset Class'
 ---
 
 <Note>
-  If you're not looking to build API reference documentation, you can delete
-  this section by removing the api-reference folder.
+  If you're not looking to build API reference documentation, you can delete this section by removing the api-reference folder.
 </Note>
 
-## Welcome
+## Welcome to Strike
 
-There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+At **Strike**, we’re revolutionizing the world of sports betting by treating sports bets as their own asset class. Our innovative platform empowers users to place, manage, and analyze sports bets in a dynamic, intuitive environment. Whether you're building a new application or integrating sports betting features into your existing platform, our API provides you with the robust tools you need.
+
+This documentation is powered by our OpenAPI specification, offering a complete guide to all available endpoints, including:
+
+- **Betting Events:** Retrieve upcoming or past betting events with flexible filtering options.
+- **Players:** Access detailed information about athletes, including stats and profiles.
+- **Lineups & Bets:** Create and manage lineups, placing sports bets with validation and risk management.
+- **Payments & Withdrawals:** Handle financial transactions securely and efficiently.
+- **Player Statistics:** Retrieve comprehensive statistics to help inform your betting strategies.
+
+There are two primary methods for building API documentation:
+- [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup)
+- [MDX Components](https://mintlify.com/docs/api-playground/mdx/configuration)
+
+For this documentation, we are using our OpenAPI specification to ensure a consistent and comprehensive reference for every endpoint.
 
 <Card
-  title="Plant Store Endpoints"
-  icon="leaf"
-  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+  title="Strike API Endpoints"
+  icon="sports-betting"
+  href="https://github.com/strike/api-reference/openapi.json"
 >
   View the OpenAPI specification file
 </Card>
 
 ## Authentication
 
-All API endpoints are authenticated using Bearer tokens and picked up from the specification file.
-
-```json
-"security": [
-  {
-    "bearerAuth": []
-  }
-]
-```
+All API endpoints are secured and require authentication via API keys. Every request must include your unique API key in the `X-API-Key` header. This authentication mechanism protects our services and ensures that only authorized users can access Strike’s innovative sports betting features.
