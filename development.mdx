@@ -1,3 +1,4 @@
+
 ---
 title: 'Development'
 description: 'Preview changes locally to update your docs'
@@ -5,7 +6,7 @@ description: 'Preview changes locally to update your docs'
 
 <Info>
   **Prerequisite**: Please install Node.js (version 19 or higher) before proceeding. <br />
-  Please upgrade to ```docs.json``` before proceeding and delete the legacy ```mint.json``` file.
+  Please upgrade to <code>docs.json</code> before proceeding and delete the legacy <code>mint.json</code> file.
 </Info>
 
 Follow these steps to install and run Mintlify on your operating system:
@@ -73,8 +74,7 @@ mintlify broken-links
 ## Deployment
 
 <Tip>
-  Unlimited editors available under the [Pro
-  Plan](https://mintlify.com/pricing) and above.
+  Unlimited editors are available under the [Pro Plan](https://mintlify.com/pricing) and above.
 </Tip>
 
 If the deployment is successful, you should see the following:
@@ -91,17 +91,29 @@ We suggest using extensions on your IDE to recognize and format MDX. If you're a
 
 <AccordionGroup>
   <Accordion title='Error: Could not load the "sharp" module using the darwin-arm64 runtime'>
-
-    This may be due to an outdated version of node. Try the following:
-    1. Remove the currently-installed version of mintlify: `npm remove -g mintlify`
+    This may be due to an outdated version of Node. Try the following:
+    1. Remove the currently-installed version of Mintlify: `npm remove -g mintlify`
     2. Upgrade to Node v19 or higher.
-    3. Reinstall mintlify: `npm install -g mintlify`
+    3. Reinstall Mintlify: `npm install -g mintlify`
   </Accordion>
 
   <Accordion title="Issue: Encountering an unknown error">
-  
-    Solution: Go to the root of your device and delete the \~/.mintlify folder. Afterwards, run `mintlify dev` again.
+    **Solution:** Go to the root of your device and delete the <code>~/.mintlify</code> folder. Afterwards, run `mintlify dev` again.
   </Accordion>
 </AccordionGroup>
 
 Curious about what changed in the CLI version? [Check out the CLI changelog.](https://www.npmjs.com/package/mintlify?activeTab=versions)
+
+## Contributing to Strike
+
+At **Strike**, we believe in the power of open source and welcome contributions from developers like you. Our platform is designed to transform sports betting into a dynamic asset class, and we’d love for you to help shape its future. Whether you want to build tutorials, develop new use cases, or even join our team, we’re excited to collaborate with the community.
+
+Here are some example ideas for tutorials and projects you could create:
+- **Building a Custom Betting Dashboard:** Create a front-end dashboard that integrates the Strike API to display real-time betting events and portfolio performance.
+- **Implementing Advanced Hedging Strategies:** Develop a guide on how to use our continuous payout system to implement dynamic hedging and risk management strategies.
+- **Real-Time Analytics Integration:** Showcase how to integrate the Strike API with analytics tools for live monitoring and performance analysis.
+- **API Key Management Best Practices:** Create a tutorial on securely managing and revoking API keys through our Developer Dashboard.
+- **Automated Betting Strategies:** Demonstrate how to build and automate betting strategies using the Strike API along with external data sources.
+
+If you’re interested in contributing, have questions, or want to share your ideas, please reach out to us at [moksh@strikebet.app](mailto:moksh@strikebet.app). We’re open to all suggestions and look forward to your contributions!
+
