@@ -21,12 +21,7 @@
               "development"
             ]
           },
-          {
-            "group": "Getting Started",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
+
           {
             "group": "Events",
             "pages": [

@@ -1,34 +1,45 @@
 ---
 title: Introduction
-description: "Welcome to Strike – where sports betting becomes a sophisticated asset class and your portfolio is managed like a pro."
+description: "Welcome to Strike – where sports betting becomes a sophisticated asset class, and our API redefines sports betting as its own asset class."
 ---
 
 <img
   className="block dark:hidden"
-  src="/images/strike.png"
+  src="/images/strike_2.png"
   alt="Hero Light"
   height="150"
 />
 <img
   className="hidden dark:block"
-  src="/images/strike.png"
+  src="/images/strike_2.png"
   alt="Hero Dark"
   height="150"
 />
+
+<Note>
+  If you're not looking to build API reference documentation, you can delete this section by removing the api-reference folder.
+</Note>
 
 ## Welcome to Strike
 
 At **Strike**, we’re revolutionizing sports betting by transforming it into a dynamic asset class. Rather than the traditional fixed-odds model, Strike allows you to take an over or under on a line with a purchased multiplier. For every point above the line on an over bet (or below on an under bet), you gain a payout multiplied by your chosen multiplier. Conversely, if the outcome goes against your bet, you lose a multiplier amount per point. This continuous payout system not only limits your risk but also opens the door to sophisticated betting strategies such as hedging and dynamic portfolio management.
 
-With the Strike API, developers can easily integrate these advanced betting features into their applications. Our endpoints empower you to:
+Our innovative platform empowers users to place, manage, and analyze sports bets in a dynamic, intuitive environment. Whether you're building a new application or integrating sports betting features into your existing platform, our API provides you with robust tools for:
 - **Place and Manage Bets:** Execute over/under bets with precise risk controls.
 - **Monitor Your Portfolio:** Track your betting positions and real-time exposures.
 - **Hedge Strategically:** Implement complex hedging strategies to secure gains.
 - **Analyze Performance:** Access comprehensive stats and analytics to refine your strategy.
 
+This documentation is powered by our OpenAPI specification, ensuring a consistent and comprehensive reference for every endpoint, including:
+- **Betting Events:** Retrieve upcoming or past betting events with flexible filtering options.
+- **Players:** Access detailed information about athletes, including stats and profiles.
+- **Lineups & Bets:** Create and manage lineups, placing sports bets with validation and risk management.
+- **Payments & Withdrawals:** Handle financial transactions securely and efficiently.
+- **Player Statistics:** Retrieve comprehensive statistics to help inform your betting strategies.
+
 ## Getting Started
 
-Integrating with the Strike API gives you the flexibility to build cutting-edge sports betting applications and manage your betting portfolio seamlessly. Whether you’re a seasoned developer or just starting out, our documentation guides you through every step of the process.
+Integrating with the Strike API gives you the flexibility to build cutting-edge sports betting applications and manage your betting portfolio seamlessly. Our endpoints empower developers to easily integrate advanced betting features into their applications.
 
 <CardGroup cols={2}>
   <Card
@@ -63,3 +74,15 @@ Integrating with the Strike API gives you the flexibility to build cutting-edge 
     Gain insights with detailed analytics and stats, helping you fine-tune your betting strategies.
   </Card>
 </CardGroup>
+
+<Card
+  title="Strike API Endpoints"
+  icon="sports-betting"
+  href="https://github.com/strike/api-reference/openapi.json"
+>
+  View the OpenAPI specification file
+</Card>
+
+## Authentication
+
+All API endpoints are secured and require authentication via API keys. Every request must include your unique API key in the `X-API-Key` header. This authentication mechanism protects our services and ensures that only authorized users can access Strike’s innovative sports betting features.
