@@ -38,37 +38,44 @@
         "tab": "API Reference",
         "groups": [
           {
-            "group": "API Documentation",
+            "group": "Getting Started",
             "pages": [
               "api-reference/introduction"
             ]
           },
           {
-              "group": "API Reference",
-              "pages": [
-                "retrieve-betting-events",
-                "retrieve-event-details",
-                "retrieve-players",
-                "retrieve-player-details",
-                "retrieve-lineup-history",
-                "submit-a-new-lineup-with-bets",
-                "retrieve-a-specific-lineup",
-                "retrieve-bet-history-or-filter-bets-by-criteria",
-                "retrieve-bet-details",
-                "retrieve-lineups-by-status",
-                "retrieve-payments-for-the-authenticated-user",
-                "retrieve-payment-details",
-                "retrieve-withdrawals-for-the-authenticated-user",
-                "retrieve-withdrawal-details",
-                "retrieve-stats-for-a-specific-player"
-              ]
+            "group": "Events",
+            "pages": [
+              "reference/retrieve-betting-events",
+              "reference/retrieve-event-details"
+            ]
           },
           {
-            "group": "Endpoint Examples",
+            "group": "Players",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete"
+              "reference/retrieve-players",
+              "reference/retrieve-player-details",
+              "reference/retrieve-player-statistics"
+            ]
+          },
+          {
+            "group": "Lineups & Bets",
+            "pages": [
+              "reference/retrieve-lineup-history",
+              "reference/submit-a-new-lineup-with-bets",
+              "reference/retrieve-a-specific-lineup",
+              "reference/retrieve-bet-history-or-filter-bets",
+              "reference/retrieve-bet-details",
+              "reference/retrieve-lineups-by-status"
+            ]
+          },
+          {
+            "group": "Payments & Withdrawals",
+            "pages": [
+              "reference/retrieve-payments",
+              "reference/retrieve-payment-details",
+              "reference/retrieve-withdrawals",
+              "reference/retrieve-withdrawal-details"
             ]
           }
         ]
