@@ -44,6 +44,26 @@
             ]
           },
           {
+              "group": "API Reference",
+              "pages": [
+                "retrieve-betting-events",
+                "retrieve-event-details",
+                "retrieve-players",
+                "retrieve-player-details",
+                "retrieve-lineup-history",
+                "submit-a-new-lineup-with-bets",
+                "retrieve-a-specific-lineup",
+                "retrieve-bet-history-or-filter-bets-by-criteria",
+                "retrieve-bet-details",
+                "retrieve-lineups-by-status",
+                "retrieve-payments-for-the-authenticated-user",
+                "retrieve-payment-details",
+                "retrieve-withdrawals-for-the-authenticated-user",
+                "retrieve-withdrawal-details",
+                "retrieve-stats-for-a-specific-player"
+              ]
+          },
+          {
             "group": "Endpoint Examples",
             "pages": [
               "api-reference/endpoint/get",
