@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Strike API Documentation",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#28B174",
+    "light": "#5BE1A5",
+    "dark": "#00321C"
   },
   "favicon": "/favicon.svg",
   "navigation": {
