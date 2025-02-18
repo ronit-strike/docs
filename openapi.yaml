@@ -1,0 +1,814 @@
+openapi: 3.0.0
+info:
+  title: My API
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+# Global security requirement applied to all endpoints:
+security:
+  - apiKeyAuth: []
+paths:
+          
+  /api/events:
+    get:
+      summary: Retrieve betting events
+      description: Retrieve a list of betting events with optional filtering.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: query
+          name: league
+          required: false
+          schema:
+            type: string
+          description: Filter events by league.
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: string
+          description: Filter events by status.
+        - in: query
+          name: fromDate
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: Start date filter (events starting after this date).
+        - in: query
+          name: toDate
+          required: false
+          schema:
+            type: string
+            format: date-time
+          description: End date filter (events starting before this date).
+      responses:
+        "200":
+          description: A list of betting events.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BettingEvent'
+        "401":
+          description: Unauthorized – missing or invalid API key.
+        "404":
+          description: No betting events found.
+        "500":
+          description: Error fetching events.
+          
+  /api/events/{eventId}:
+    get:
+      summary: Retrieve event details
+      description: Retrieve details of a specific betting event by event ID.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the betting event.
+      responses:
+        "200":
+          description: Betting event details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BettingEvent'
+        "401":
+          description: Unauthorized – missing or invalid API key.
+        "404":
+          description: Betting event not found.
+        "500":
+          description: Error fetching event details.
+          
+  /api/players:
+    get:
+      summary: Retrieve players
+      description: Retrieve a list of players with optional filtering.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: query
+          name: team
+          required: false
+          schema:
+            type: string
+          description: Filter players by team.
+        - in: query
+          name: leagueId
+          required: false
+          schema:
+            type: string
+          description: Filter players by league ID.
+        - in: query
+          name: position
+          required: false
+          schema:
+            type: string
+          description: Filter players by position.
+      responses:
+        "200":
+          description: A list of players.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Player'
+        "401":
+          description: Unauthorized – missing or invalid API key.
+        "404":
+          description: No players found.
+        "500":
+          description: Error fetching players.
+          
+  /api/players/{playerId}:
+    get:
+      summary: Retrieve player details
+      description: Retrieve details of a specific player by player ID.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: playerId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the player.
+      responses:
+        "200":
+          description: Player details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Player'
+        "401":
+          description: Unauthorized – missing or invalid API key.
+        "404":
+          description: Player not found.
+        "500":
+          description: Error fetching player details.
+
+
+  /api/lineups:
+    post:
+      summary: Submit a new lineup with bets
+      description: >
+        Submits a new lineup containing an array of bets.
+        At least 2 bets are required. Each bet must include the fields:
+        eventId, stopLoss, betSide, and multiplier.
+        The endpoint validates bets (including stop loss range, sufficient funds, and duplicate bets)
+        before creating the lineup and updating event exposures.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bets:
+                  type: array
+                  description: Array of bet objects.
+                  items:
+                    type: object
+                    properties:
+                      eventId:
+                        type: string
+                        format: uuid
+                      stopLoss:
+                        type: number
+                      betSide:
+                        type: string
+                      multiplier:
+                        type: number
+                    required:
+                      - eventId
+                      - stopLoss
+                      - betSide
+                      - multiplier
+              required:
+                - bets
+      responses:
+        "201":
+          description: Lineup created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lineup'
+        "400":
+          description: >
+            Bad Request – missing fields, invalid payload,
+            insufficient funds, or duplicate bet errors.
+        "500":
+          description: Server error during lineup creation or exposure update.
+      security:
+        - apiKeyAuth: []
+    get:
+      summary: Retrieve lineup history
+      description: >
+        Retrieves the list of lineups for the authenticated user,
+        including nested bet details.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+      responses:
+        "200":
+          description: List of user lineups.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lineup'
+        "400":
+          description: Bad Request or Hasura error.
+        "500":
+          description: Server error.
+      security:
+        - apiKeyAuth: []
+  /api/lineups/{lineupId}:
+    get:
+      summary: Retrieve a specific lineup
+      description: >
+        Retrieves details for a specific lineup identified by its unique ID,
+        including its nested bet details.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: lineupId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the lineup.
+      responses:
+        "200":
+          description: Lineup details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Lineup'
+        "400":
+          description: Bad Request.
+        "404":
+          description: Lineup not found.
+        "500":
+          description: Server error.
+      security:
+        - apiKeyAuth: []
+  /api/bets:
+    get:
+      summary: Retrieve bet history or filter bets by criteria
+      description: >
+        Retrieves bet history for the authenticated user.
+        Optionally, the results can be filtered by query parameters:
+        - **league**: filter bets by league.
+        - **players**: a comma-separated list of player IDs.
+        - **active**: filter by active status.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: query
+          name: league
+          required: false
+          schema:
+            type: string
+          description: Filter bets by league.
+        - in: query
+          name: players
+          required: false
+          schema:
+            type: string
+          description: Comma-separated list of player IDs to filter bets.
+        - in: query
+          name: active
+          required: false
+          schema:
+            type: boolean
+          description: Filter bets by active status.
+      responses:
+        "200":
+          description: A list of bets.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bet'
+        "400":
+          description: Bad Request.
+        "500":
+          description: Server error.
+      security:
+        - apiKeyAuth: []
+  /api/bets/{betId}:
+    get:
+      summary: Retrieve bet details
+      description: >
+        Retrieves details for a specific bet identified by its unique ID,
+        for the authenticated user.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: betId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the bet.
+      responses:
+        "200":
+          description: Bet details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bet'
+        "400":
+          description: Bad Request.
+        "404":
+          description: Bet not found.
+        "500":
+          description: Server error.
+      security:
+        - apiKeyAuth: []
+  /api/lineups/status/{status}:
+    get:
+      summary: Retrieve lineups by status
+      description: >
+        Retrieves lineups for the authenticated user filtered by status.
+        The status parameter must be either **active** or **completed**.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: status
+          required: true
+          schema:
+            type: string
+            enum: [active, completed]
+          description: Status filter for lineups.
+      responses:
+        "200":
+          description: A list of lineups matching the specified status.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Lineup'
+        "400":
+          description: Bad Request.
+        "500":
+          description: Server error.
+      security:
+        - apiKeyAuth: []
+
+
+  /api/payments:
+    get:
+      summary: Retrieve payments for the authenticated user
+      description: Retrieves a list of payments for the authenticated user.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+      responses:
+        "200":
+          description: A list of payments.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+        "400":
+          description: Error in Hasura response or invalid request.
+        "500":
+          description: Error processing the request.
+      security:
+        - apiKeyAuth: []
+  /api/payments/{paymentId}:
+    get:
+      summary: Retrieve payment details
+      description: Retrieves details of a specific payment identified by paymentId for the authenticated user.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: paymentId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the payment.
+      responses:
+        "200":
+          description: Payment details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        "400":
+          description: Error in Hasura response or invalid request.
+        "404":
+          description: Payment not found.
+        "500":
+          description: Error processing the request.
+      security:
+        - apiKeyAuth: []
+  /api/withdrawals:
+    get:
+      summary: Retrieve withdrawals for the authenticated user
+      description: Retrieves a list of withdrawals for the authenticated user.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+      responses:
+        "200":
+          description: A list of withdrawals.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Withdrawal'
+        "400":
+          description: Error in Hasura response or invalid request.
+        "500":
+          description: Error processing the request.
+      security:
+        - apiKeyAuth: []
+  /api/withdrawals/{withdrawId}:
+    get:
+      summary: Retrieve withdrawal details
+      description: Retrieves details of a specific withdrawal identified by withdrawId for the authenticated user.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: withdrawId
+          required: true
+          schema:
+            type: integer
+          description: Unique identifier of the withdrawal.
+      responses:
+        "200":
+          description: Withdrawal details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Withdrawal'
+        "400":
+          description: Error in Hasura response or invalid request.
+        "404":
+          description: Withdrawal not found.
+        "500":
+          description: Error processing the request.
+      security:
+        - apiKeyAuth: []
+  /api/players_stats/{playerId}/stats:
+    get:
+      summary: Retrieve stats for a specific player
+      description: >
+        Retrieve statistics for a specific player.
+        Optionally filter by **statType**, **fromDate**, and **toDate**.
+      parameters:
+        - in: header
+          name: X-API-Key
+          required: true
+          schema:
+            type: string
+          description: API key for authentication.
+        - in: path
+          name: playerId
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Unique identifier of the player.
+        - in: query
+          name: statType
+          required: false
+          schema:
+            type: string
+          description: Filter stats by type.
+        - in: query
+          name: fromDate
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter stats from this date (inclusive).
+        - in: query
+          name: toDate
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Filter stats up to this date (inclusive).
+      responses:
+        "200":
+          description: A list of player stats.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stat'
+        "400":
+          description: Bad Request – error in Hasura response or invalid query parameters.
+        "404":
+          description: Player not found or no stats available.
+        "500":
+          description: Server error while processing the request.
+      security:
+        - apiKeyAuth: []
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    Stat:
+      type: object
+      properties:
+        statsId:
+          type: string
+          description: Unique identifier for the stat record.
+        playerId:
+          type: string
+          format: uuid
+          description: Unique identifier for the player.
+        statType:
+          type: string
+          description: Type of the statistic.
+        gameDate:
+          type: string
+          format: date
+          description: Date of the game.
+        figure:
+          type: number
+          description: Numeric value of the statistic.
+  
+    Payment:
+          type: object
+          properties:
+            paymentId:
+              type: string
+              format: uuid
+            userId:
+              type: string
+              format: uuid
+            amount:
+              type: number
+            status:
+              type: string
+            method:
+              type: string
+            time:
+              type: string
+              format: date-time
+            paypalId:
+              type: string
+              nullable: true
+    Withdrawal:
+        type: object
+        properties:
+          withdrawId:
+            type: integer
+          userId:
+            type: string
+            format: uuid
+          createdAt:
+            type: string
+            format: date-time
+          amount:
+            type: number
+          venmoUsername:
+            type: string
+          status:
+            type: string
+            
+    BettingEvent:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        playerId:
+          type: string
+          format: uuid
+        statType:
+          type: string
+        league:
+          type: string
+        resultNumeric:
+          type: number
+        lineValue:
+          type: number
+        status:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        totalExposure:
+          type: number
+        totalOverVolume:
+          type: number
+        totalUnderVolume:
+          type: number
+        opponent:
+          type: string
+        premium:
+          type: number
+        playerName:
+          type: string
+        payoutCoefficient:
+          type: number
+        payoutOrder:
+          type: number
+        edge:
+          type: number
+    Player:
+      type: object
+      properties:
+        playerId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        position:
+          type: string
+        team:
+          type: string
+        teamName:
+          type: string
+        leagueId:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
+        prizepicksId:
+          type: string
+        recentNews:
+          type: string
+        experience:
+          type: number
+        birthDate:
+          type: string
+          format: date
+        college:
+          type: string
+        draftYear:
+          type: integer
+        height:
+          type: number
+        weight:
+          type: number
+
+    Lineup:
+      type: object
+      properties:
+        lineupId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        date:
+          type: string
+          format: date-time
+        totalPotentialGain:
+          type: number
+        totalPotentialLoss:
+          type: number
+        totalEntryFee:
+          type: number
+        status:
+          type: string
+        bets:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bet'
+        totalWin:
+          type: number
+        totalLoss:
+          type: number
+    Bet:
+      type: object
+      properties:
+        betId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        eventId:
+          type: string
+          format: uuid
+          nullable: true
+        playerId:
+          type: string
+          format: uuid
+          nullable: true
+        league:
+          type: string
+          nullable: true
+        placedAt:
+          type: string
+          format: date-time
+          nullable: true
+        potentialPayout:
+          type: number
+        potentialLoss:
+          type: number
+        multiplier:
+          type: number
+        betSide:
+          type: string
+        lineValue:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+        active:
+          type: boolean
+        status:
+          type: string
+        payout:
+          type: number
+          nullable: true
+        lineupId:
+          type: string
+          format: uuid
+          nullable: true
+
