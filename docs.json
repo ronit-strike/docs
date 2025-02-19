@@ -78,13 +78,13 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:mokshith@strikebet.app"
+        "href": "mailto:moksh@strikebet.app"
       }
     ],
     "primary": {
       "type": "button",
       "label": "Dashboard",
-      "href": "https://strikebet.app/developer"
+      "href": "https://beta.strikebet.app/developer"
     }
   },
   "footer": {
