@@ -668,7 +668,7 @@ paths:
       security:
         - apiKeyAuth: []
 
-  /api/players_stats/{playerId}/stats:
+  /api/players-stats/{playerId}/stats:
     get:
       summary: Retrieve Player Statistics
       description: |
