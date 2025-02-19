@@ -9,7 +9,7 @@ info:
     into distinct sections based on functionality. Refer to the detailed instructions 
     below each endpoint to understand how to format your requests and interpret the responses.
 servers:
-  - url: http://localhost:8080
+  - url: https://api.strikebet.app
 # Global security requirement applied to all endpoints:
 security:
   - apiKeyAuth: []
